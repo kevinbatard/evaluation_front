@@ -1,8 +1,32 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { url } from '../constants/url';
+import { ProductContext } from '../context/ProductContext';
 
 export default function NewProduct() {
+    const { product, setProduct } = useContext(ProductContext);
     const [openForm, setOpenForm] = useState({ display: 'inline' });
     const [addProduct, setAddProduct] = useState({ display: 'none' });
+    const [nom, setNom] = useState<string>('');
+    const [prix, setPrix] = useState<number>();
+    const [quantity, setQuantity] = useState<number>();
+
+    const Options = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nom: `${nom}`, prix: prix, quantité: quantity }),
+    };
+
+    const newProduct = () => {
+        fetch(`${url}/produits`, Options)
+            .then((response) => response.json())
+            .then((response) => response.data)
+            .then((response) => {
+                const newProduct = [...product];
+                newProduct.push(response);
+                setProduct(newProduct);
+            })
+            .catch((err) => console.error(err));
+    };
 
     return (
         <div>
@@ -15,9 +39,10 @@ export default function NewProduct() {
                         Nom
                     </label>
                     <input
-                        type="email"
+                        type="text"
                         className="form-control"
-                        id="exampleFormControlInput1"
+                        id="NameInput"
+                        onChange={(e) => setNom(e.target.value)}
                     ></input>
                 </div>
                 <div className="mb-3">
@@ -28,9 +53,10 @@ export default function NewProduct() {
                         Prix
                     </label>
                     <input
-                        type="email"
+                        type="text"
                         className="form-control"
-                        id="exampleFormControlInput1"
+                        id="PriceInput"
+                        onChange={(e) => setPrix(parseInt(e.target.value))}
                     ></input>
                 </div>
                 <div className="mb-3">
@@ -41,9 +67,10 @@ export default function NewProduct() {
                         Quantité
                     </label>
                     <input
-                        type="email"
+                        type="text"
                         className="form-control"
-                        id="exampleFormControlInput1"
+                        id="QuantityInput"
+                        onChange={(e) => setQuantity(parseInt(e.target.value))}
                     ></input>
                 </div>
                 <div>
@@ -52,6 +79,7 @@ export default function NewProduct() {
                         type="submit"
                         value="Ajouter"
                         onClick={() => {
+                            newProduct();
                             setOpenForm({ display: 'inline' });
                             setAddProduct({ display: 'none' });
                         }}

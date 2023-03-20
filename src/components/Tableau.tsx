@@ -1,31 +1,28 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useContext } from 'react';
 import { url } from '../constants/url';
-import { TProduct } from '../types/TProduct';
+import { ProductContext } from '../context/ProductContext';
+import Delete from './Delete';
+import Update from './Update';
 
-export default function Tableau(props: {
-    product: TProduct[];
-    setProduct: React.Dispatch<React.SetStateAction<TProduct[]>>;
-}) {
+export default function Tableau() {
+    const { product, setProduct } = useContext(ProductContext);
     useEffect(() => {
         fetch(`${url}/produits`)
             .then((response) => response.json())
-            .then((data) => props.setProduct(data.data))
+            .then((data) => setProduct(data.data))
             .catch((err) => console.error(err));
-    }, []);
+    }, [setProduct]);
+    console.log(product);
 
-    const data = props.product.map((elm, i) => (
+    const data = product.map((elm, i) => (
         <tr key={i}>
             <th scope="row">{i + 1}</th>
             <td>{elm.nom}</td>
             <td>{elm.prix}</td>
             <td>{elm.quantité}</td>
             <td>
-                <button type="button" className="btn btn-primary btn-sm me-1">
-                    Editer
-                </button>
-                <button type="button" className="btn btn-danger btn-sm">
-                    Supprimer
-                </button>
+                <Update />
+                <Delete id={elm.id} />
             </td>
         </tr>
     ));
