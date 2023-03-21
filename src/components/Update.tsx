@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useContext } from 'react';
 import { url } from '../constants/url';
 import { ProductContext } from '../context/ProductContext';
 import { TProduct } from '../types/TProduct';
@@ -13,8 +13,9 @@ export default function Update(props: {
     data: TProduct;
     updating: number;
     setUpdating: React.Dispatch<React.SetStateAction<number>>;
+    isUpdating: boolean;
+    setIsUpdating: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-    const [isUpdating, setIsUpdating] = useState<boolean>(false);
     const { product, setProduct } = useContext(ProductContext);
 
     const Options = {
@@ -41,13 +42,13 @@ export default function Update(props: {
                     return product;
                 });
                 setProduct(updatedProducts);
-                setIsUpdating(false);
+                props.setIsUpdating(false);
                 props.setUpdating(-1);
             });
 
     return (
         <div>
-            {isUpdating === false ? (
+            {props.isUpdating === false ? (
                 <button
                     type="button"
                     className="btn btn-primary btn-sm me-1"
@@ -56,28 +57,48 @@ export default function Update(props: {
                         props.setPrix(props.data.prix);
                         props.setQuantity(props.data.quantité);
                         props.setUpdating(props.data.id);
-                        setIsUpdating(true);
+                        props.setIsUpdating(true);
                     }}
                 >
                     Editer
                 </button>
             ) : (
-                <button
-                    type="button"
-                    className="btn btn-success btn-sm me-1"
-                    onClick={() => {
-                        if (
-                            props.nom.length === 0 ||
-                            !props.prix ||
-                            !props.quantity
-                        )
-                            return alert('Veuillez renseigner tous les champs');
+                <div>
+                    {props.updating === props.data.id ? (
+                        <button
+                            type="button"
+                            className="btn btn-success btn-sm me-1"
+                            onClick={() => {
+                                if (
+                                    props.nom.length === 0 ||
+                                    !props.prix ||
+                                    !props.quantity
+                                )
+                                    return alert(
+                                        'Veuillez renseigner tous les champs'
+                                    );
 
-                        updateProduct();
-                    }}
-                >
-                    Valider
-                </button>
+                                updateProduct();
+                            }}
+                        >
+                            Valider
+                        </button>
+                    ) : (
+                        <button
+                            type="button"
+                            className="btn btn-primary btn-sm me-1"
+                            onClick={() => {
+                                props.setNom(props.data.nom);
+                                props.setPrix(props.data.prix);
+                                props.setQuantity(props.data.quantité);
+                                props.setUpdating(props.data.id);
+                                props.setIsUpdating(true);
+                            }}
+                        >
+                            Editer
+                        </button>
+                    )}
+                </div>
             )}
         </div>
     );

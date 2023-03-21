@@ -10,6 +10,7 @@ export default function Tableau() {
     const [nom, setNom] = useState<string>('');
     const [prix, setPrix] = useState<number>(-1);
     const [quantity, setQuantity] = useState<number>(-1);
+    const [isUpdating, setIsUpdating] = useState<boolean>(false);
 
     useEffect(() => {
         fetch(`${url}/produits`)
@@ -72,8 +73,16 @@ export default function Tableau() {
                         nom={nom}
                         prix={prix}
                         quantity={quantity}
+                        isUpdating={isUpdating}
+                        setIsUpdating={setIsUpdating}
                     />
-                    <Delete id={elm.id} />
+                    <Delete
+                        id={elm.id}
+                        isUpdating={isUpdating}
+                        setIsUpdating={setIsUpdating}
+                        updating={updating}
+                        setUpdating={setUpdating}
+                    />
                 </div>
             </td>
         </tr>
