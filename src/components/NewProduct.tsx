@@ -7,8 +7,8 @@ export default function NewProduct() {
     const [openForm, setOpenForm] = useState({ display: 'inline' });
     const [addProduct, setAddProduct] = useState({ display: 'none' });
     const [nom, setNom] = useState<string>('');
-    const [prix, setPrix] = useState<number>();
-    const [quantity, setQuantity] = useState<number>();
+    const [prix, setPrix] = useState<number | undefined>();
+    const [quantity, setQuantity] = useState<number | undefined>();
 
     const Options = {
         method: 'POST',
@@ -43,6 +43,7 @@ export default function NewProduct() {
                         className="form-control"
                         id="NameInput"
                         onChange={(e) => setNom(e.target.value)}
+                        required
                     ></input>
                 </div>
                 <div className="mb-3">
@@ -57,6 +58,7 @@ export default function NewProduct() {
                         className="form-control"
                         id="PriceInput"
                         onChange={(e) => setPrix(parseInt(e.target.value))}
+                        required
                     ></input>
                 </div>
                 <div className="mb-3">
@@ -71,15 +73,33 @@ export default function NewProduct() {
                         className="form-control"
                         id="QuantityInput"
                         onChange={(e) => setQuantity(parseInt(e.target.value))}
+                        required
                     ></input>
                 </div>
                 <div>
                     <input
-                        className="btn btn-primary"
+                        className="btn btn-success"
                         type="submit"
                         value="Ajouter"
                         onClick={() => {
+                            if (
+                                nom.length === 0 ||
+                                prix === undefined ||
+                                quantity === undefined
+                            )
+                                return alert(
+                                    'Veuillez compléter tout les champs'
+                                );
                             newProduct();
+                            setOpenForm({ display: 'inline' });
+                            setAddProduct({ display: 'none' });
+                        }}
+                    ></input>
+                    <input
+                        className="btn btn-primary ms-2"
+                        type="submit"
+                        value="Retour"
+                        onClick={() => {
                             setOpenForm({ display: 'inline' });
                             setAddProduct({ display: 'none' });
                         }}

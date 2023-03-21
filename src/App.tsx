@@ -9,7 +9,7 @@ import { TProduct } from './types/TProduct';
 function App() {
     const [product, setProduct] = useState<TProduct[]>([]);
     return (
-        <div className="App">
+        <div>
             <Header />
             <div className="container">
                 <ProductContext.Provider value={{ product, setProduct }}>
